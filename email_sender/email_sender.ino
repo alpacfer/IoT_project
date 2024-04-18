@@ -22,9 +22,10 @@ void setup() {
   smtpSender.wifiBegin();
   smtpSender.SMTPConnect();
 
-  smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
+  // smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
 }
 
 void loop() {
-  // Nothing here
+  delay(5000);
+  smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
 }

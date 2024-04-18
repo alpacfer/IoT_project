@@ -71,7 +71,7 @@ void SMTPEmailSender::sendEmail(const char* title, const char* subject, const ch
 
 
   Serial.println("Sending email...");
-  if (!MailClient.sendMail(&smtp, &message)) {
+  if (!MailClient.sendMail(&smtp, &message, false)) {   // false = dont end session
     ESP_MAIL_PRINTF("Error, Status Code: %d, Error Code: %d, Reason: %s", smtp.statusCode(), smtp.errorCode(), smtp.errorReason().c_str());
   }
 
