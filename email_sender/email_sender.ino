@@ -19,6 +19,7 @@ void setup() {
   Serial.begin(9600);
   delay(1000); // Delay to allow serial connection to be established
 
+  // SMTP initialization
   smtpSender.wifiBegin();
   smtpSender.SMTPConnect();
 
@@ -26,6 +27,6 @@ void setup() {
 }
 
 void loop() {
-  delay(5000);
+  delay(60000);
   smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
 }
