@@ -6,7 +6,7 @@
 #include <ESP8266WiFiMulti.h>   // Include the Wi-Fi-Multi library
 #include <ESP8266WebServer.h>   // Include the WebServer library
 #include <ESP8266mDNS.h>        // Include the mDNS library
-
+#include "SMTPEmailSender.h"
 
 // Uncomment one of the lines below for whatever DHT sensor type you're using!
 #define DHTTYPE DHT11   // DHT 11
@@ -25,6 +25,14 @@ void handleNotFound();
 const char* ssid = "Lucas";
 const char* password = "123456789abc";
 
+// SMTP credentials
+const char* smtpHost = "smtp.gmail.com";
+unsigned int smtpPort = 465;
+
+// E-mail credentials
+const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
+const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
+const char* receiverEmail = "l.eilsborg@gmail.com";   // E-mail to receive data
 
 
 
@@ -46,6 +54,10 @@ const char * myWriteAPIKey = "EOEPEW3V0RKNBQZE"; // your WRITE API key
 const char* server_api = "api.thingspeak.com";
 
 const int postingInterval = 20 * 1000; // post data every 20 seconds
+
+
+
+SMTPEmailSender smtpSender(ssid, password, smtpHost, smtpPort, senderEmail, senderPassword, receiverEmail);
 
 // only runs once on boot
 void setup() {
@@ -92,6 +104,11 @@ void setup() {
   // Start the server
   server.begin();
   Serial.println("Server started"); 
+
+
+   // SMTP initialization
+  smtpSender.SMTPConnect();
+
   
 }
 
@@ -170,7 +187,8 @@ void loop() {
       ThingSpeak.writeFields(channelID, myWriteAPIKey);
   }
     client.stop();
-
+  delay(60000);
+  smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
   // wait and then post again
   delay(postingInterval);
 }
