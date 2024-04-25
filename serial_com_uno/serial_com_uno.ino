@@ -17,7 +17,7 @@ void setup() {
 
 void loop() {
   int data = random(0,100);
-  // Serial.println(String(data));
+  Serial.println(data);
   esp8266.println(data);
   delay(1000);
 }
