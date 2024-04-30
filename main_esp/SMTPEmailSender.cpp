@@ -51,7 +51,7 @@ void SMTPEmailSender::SMTPConnect(){
   while (!smtp.connect(&config)) {
     ESP_MAIL_PRINTF("Connection error, Status Code: %d, Error Code: %d, Reason: %s", smtp.statusCode(), smtp.errorCode(), smtp.errorReason().c_str());
     Serial.println("");
-    delay(50);
+    delay(150);
   }
   // digitalWrite(LED_BUILTIN, LOW);
 
