@@ -1,23 +1,34 @@
-#include <SoftwareSerial.h>
 
-// Define the RX and TX pins for SoftwareSerial
-const int rxPin = 2;  // RX pin of ESP8266 connected to pin 2 (remember to voltage divide the 5V from uno to 3.3V to esp)
-const int txPin = 3;  // TX pin of ESP8266 connected to pin 3
-
-SoftwareSerial esp8266(rxPin, txPin);
-
+#include <Wire.h>
+int receivedInt;
 void setup() {
-  // Init serial coms
-  Serial.begin(9600);
-  esp8266.begin(9600);
-
-  // Wait for serial module inits
-  delay(1000);
+ Wire.begin(8); /* join i2c bus with address 8 */
+ Wire.onReceive(receiveEvent); /* register receive event */
+ Wire.onRequest(requestEvent); /* register request event */
+ Serial.begin(9600); /* start serial for debug */
 }
 
 void loop() {
-  int data = random(0,100);
-  Serial.println(data);
-  esp8266.println(data);
-  delay(1000);
+ delay(100);
+}
+
+// function that executes whenever data is received from master
+void receiveEvent(int howMany) {
+ while (0 <Wire.available()) {
+  byte receivedHighByte = Wire.read();
+  byte receivedLowByte = Wire.read();
+  receivedInt = (receivedHighByte << 8) | receivedLowByte;
+  Serial.print(receivedInt);
+ }
+ Serial.println(); /* to newline */
+}
+
+// function that executes whenever data is requested from master
+void requestEvent() {
+  int myInt = random(0,100); // Example integer value
+  Serial.println(myInt);
+  byte lowByte = myInt & 0xFF; // Extract LSB
+  byte highByte = (myInt >> 8) & 0xFF; // Extract MSB
+  Wire.write(highByte);
+  Wire.write(lowByte);
 }

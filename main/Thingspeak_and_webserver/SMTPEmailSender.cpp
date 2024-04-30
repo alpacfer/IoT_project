@@ -60,7 +60,7 @@ void SMTPEmailSender::SMTPConnect(){
   }
 }
 
-void SMTPEmailSender::sendEmail(const char* title, const char* subject, const char* text){
+void SMTPEmailSender::sendEmail(const char* title, const char* subject,const char* text){
   SMTP_Message message; // Structure used in ESP Mail Client library for representing an email message
   message.sender.name = title;
   message.sender.email = _senderEmail;

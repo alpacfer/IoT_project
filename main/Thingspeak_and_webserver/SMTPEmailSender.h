@@ -18,7 +18,7 @@ class SMTPEmailSender {
     );
     void wifiBegin();
     void SMTPConnect();
-    void sendEmail(const char* title, const char* subject, const char* text);
+    void sendEmail(const char* title, const char* subject,const char* text);
 
   private:
     const char* _ssid;

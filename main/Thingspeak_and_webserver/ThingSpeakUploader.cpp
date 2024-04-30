@@ -24,8 +24,12 @@ void ThingSpeakUploader::wifiBegin(){
     Serial.println("Failed to connect to WiFi");
   }
   Serial.println("Wifi Connected");
+  delay(100);
   Serial.println("Server IP Address: ");
+  delay(100);
   Serial.println(WiFi.localIP());
+  delay(100);
+
   
 }
 

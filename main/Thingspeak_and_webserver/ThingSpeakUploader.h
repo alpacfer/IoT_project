@@ -13,7 +13,6 @@
 #include <ESP8266mDNS.h>        // Include the mDNS library
 #include "SMTPEmailSender.h"
 #include "ThingSpeakUploader.h"
-#include "WebPage.h"
 
 
 class ThingSpeakUploader {
