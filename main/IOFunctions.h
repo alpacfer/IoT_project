@@ -18,7 +18,7 @@ const int pump = 8;
 //MAX7219 stuff
 int DIN = 11;
 int CS = 12;
-int   CLK = 13;
+int CLK = 13;
 LedControl lc=LedControl(DIN, CLK, CS,0);
 
 //Figures for MAX7219

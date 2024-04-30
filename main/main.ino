@@ -2,13 +2,13 @@
 #include "LedControl.h"
 #include <Wire.h>
 
+SoftwareSerial esp8266(rxPin, txPin);
 
 // These constants are set up according to the plat:
 const int targetMoisture = 40; //Set target soil moisture
 const int targetSunlightHours = 5; //Set target daily amount of sunlight
 const int targetTemp[2] = {15, 30}; //Set target ambient temperature range
 const int targetHum[2] = {15, 40}; //Set target ambient humidity range
-
 
 const int targetSunlight = targetSunlightHours * 3600; // Converted to seconds, don't touch this
 
@@ -28,11 +28,22 @@ const char* password = "raviolilove";
 // SMTP credentials
 const char* smtpHost = "smtp.gmail.com";
 unsigned int smtpPort = 465;
+int sendEmailCounter = 0; // when to send email
+// E-mail credentials
+const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
+const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
+const char* receiverEmail = "l.eilsborg@gmail.com";   // E-mail to receive data
+
+SMTPEmailSender smtpSender(ssid, password, smtpHost, smtpPort, senderEmail, senderPassword, receiverEmail);
 
 
 void setup() {
   IOsetup(); //This function handles setup for IO
+
   Serial.begin(9600);
+  esp8266.begin(9600);
+  delay(1000); // Wait for serial module inits
+
   pinMode(8, OUTPUT);
 
   // start wirecommunication
@@ -51,7 +62,6 @@ void loop() {
   //Print variables to Serial Monitor
   printVar(temperature, humidity, moisture, totalLightDuration);
 
-  
   //Perform actions based on variables
   outputControl(temperature, humidity, moisture, targetMoisture, targetTemp, targetHum);
   
