@@ -15,13 +15,13 @@
 
 class WebPage {
   public:
-    WebPage(int* led);
+    WebPage(const int* test);
     void handleRoot();
-    void handleLED();
+    void handleLED(int led);
     void handleNotFound();
 
   private:
-    int* led;
+    const int* _test;
     //const char* _password;
     //const char* _writeApiKey;
 

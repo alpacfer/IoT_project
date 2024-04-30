@@ -1,10 +1,7 @@
 #include "WebPage.h"
 
-WebPage::WebPage(int* led) {
-  /*
-  Constructor containing wifi name (ssid), password, write key api and channel id to allow uploading of data
-  */
-  _led = led;
+WebPage::WebPage(const int *test) {
+ _test = test;
   
 }
 void WebPage::handleRoot() {                         // When URI / is requested, send a web page with a button to toggle the LED
@@ -19,7 +16,7 @@ void WebPage::handleRoot() {                         // When URI / is requested,
       </body></html>");
 }
 
-void WebPage::handleLED(int *led) {                          // If a POST request is made to URI /LED
+void WebPage::handleLED(int led) {                          // If a POST request is made to URI /LED
   led = !led;                                // Change the state of the LED
   server.sendHeader("Location","/");        // Add a header to respond with a new location for the browser to go to the home page again
   server.send(303);                         // Send it back to the browser with an HTTP status 303 (See Other) to redirect

@@ -8,12 +8,15 @@
 #include <ESP8266mDNS.h>        // Include the mDNS library
 #include "SMTPEmailSender.h"
 #include "ThingSpeakUploader.h"
+#include "WebPage.h" 
 
-// Uncomment one of the lines below for whatever DHT sensor type you're using!
+
+
+
+
 #define DHTTYPE DHT11   // DHT 11
+
 ESP8266WiFiMulti wifiMulti;
-
-
 int led = 0;
 int i = 0;
 
@@ -38,19 +41,18 @@ WiFiClient client;
 
 const int DHTPin = D3;
 
+
 // Temporary variables
 static char celsiusTemp[7];
 static char fahrenheitTemp[7];
 static char humidityTemp[7];
 
-
+// ThingSpeak Channel ID
 unsigned long channelID = 2029121; //your channel
 const char * myWriteAPIKey = "EOEPEW3V0RKNBQZE"; // your WRITE API key
-const char* server_api = "api.thingspeak.com";
+
 
 const int postingInterval = 20 * 1000; // post data every 20 seconds
-
-
 
 // Create an instance of the server
 ESP8266WebServer server(80);
@@ -73,26 +75,19 @@ void setup() {
 
   dht.begin();
   
- tsUploader.wifiBegin();
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-  if (MDNS.begin("iot")) {              // Start the mDNS responder for esp8266.local
+  // Connecting to WiFi network and return local ip
+  tsUploader.wifiBegin();
+  // Start the mDNS responder for esp8266.local
+  if (MDNS.begin("iot")) {
     Serial.println("mDNS responder started");
   } else {
     Serial.println("Error setting up MDNS responder!");
   }
 
 
-
-  server.on("/", HTTP_GET, handleRoot);
-  server.on("/LED", HTTP_POST, handleLED);
-  server.onNotFound(handleNotFound);
+  server.on("/", HTTP_GET, WebPage.handleRoot());
+  server.on("/LED", HTTP_POST, WebPage.handleLED(led));
+  server.onNotFound(WebPage.handleNotFound());
     
   // Start the server
   server.begin();
@@ -107,26 +102,72 @@ void setup() {
 
 // runs over and over again
 void loop() {
-  
-  // Check if a client has connected
-  server.handleClient();
-// **** This part reads only sensors and calculates
-            // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-            float h = dht.readHumidity();
-            // Read temperature as Celsius (the default)
-            float t = dht.readTemperature();
-            // Read temperature as Fahrenheit (isFahrenheit = true)
-            float f = dht.readTemperature(true);
-            // Check if any reads failed and exit early (to try again).
-           
-           tsUploader.uploadData(1,t );
-           tsUploader.uploadData(6,led);
+  // **** This part reads only sensors and calculates
+        // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+        float h = dht.readHumidity();
+        // Read temperature as Celsius (the default)
+        float t = dht.readTemperature();
+        // Read temperature as Fahrenheit (isFahrenheit = true)
+        float f = dht.readTemperature(true);
 
+        float hif = 0;
+        // Check if any reads failed and exit early (to try again).
+        if (isnan(h) || isnan(t) || isnan(f)) {
+          Serial.println("Failed to read from DHT sensor!");
+          strcpy(celsiusTemp,"Failed");
+          strcpy(fahrenheitTemp, "Failed");
+          strcpy(humidityTemp, "Failed");         
+        }
+        else{
+          // Computes temperature values in Celsius + Fahrenheit and Humidity
+          float hic = dht.computeHeatIndex(t, h, false);       
+          dtostrf(hic, 6, 2, celsiusTemp);             
+          float hif = dht.computeHeatIndex(f, h);
+          dtostrf(hif, 6, 2, fahrenheitTemp);         
+          dtostrf(h, 6, 2, humidityTemp);
+
+          // You can delete the following Serial.print's, it's just for debugging purposes
+          Serial.print("Humidity: ");
+          Serial.print(h);
+          Serial.print(" %\t Temperature: ");
+          Serial.print(t);
+          Serial.print(" *C ");
+          Serial.print(f);
+          Serial.print(" *F\t Heat index: ");
+          Serial.print(hic);
+          Serial.print(" *C ");
+          Serial.print(hif);
+          Serial.print(" *F");
+          Serial.print("Humidity: ");
+          Serial.print(h);
+          Serial.print(" %\t Temperature: ");
+          Serial.print(t);
+          Serial.print(" *C ");
+          Serial.print(f);
+          Serial.print(" *F\t Heat index: ");
+          Serial.print(hic);
+          Serial.print(" *C ");
+          Serial.print(hif);
+          Serial.println(" *F");
+    
+        }
+        tsUploader.uploadData(1, t);
+        tsUploader.uploadData(2, hif);
+        tsUploader.uploadData(3, h);
+        
   delay(60000);
   smtpSender.sendEmail("TITEL TEST", "SUBJECT TEST", "TEXT TEXT TEXT HELLO");
   // wait and then post again
   delay(postingInterval);
 }
+
+
+
+
+
+
+
+
 
 
 void handleRoot() {                         // When URI / is requested, send a web page with a button to toggle the LED

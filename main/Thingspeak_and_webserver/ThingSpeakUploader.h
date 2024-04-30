@@ -5,6 +5,16 @@
 #include <ESP8266WiFi.h>
 #include <ThingSpeak.h>
 #include "Arduino.h"
+#include <DHT.h>
+#include <ThingSpeak.h>
+#include <WiFiClient.h>
+#include <ESP8266WiFiMulti.h>   // Include the Wi-Fi-Multi library
+#include <ESP8266WebServer.h>   // Include the WebServer library
+#include <ESP8266mDNS.h>        // Include the mDNS library
+#include "SMTPEmailSender.h"
+#include "ThingSpeakUploader.h"
+#include "WebPage.h"
+
 
 class ThingSpeakUploader {
   public:

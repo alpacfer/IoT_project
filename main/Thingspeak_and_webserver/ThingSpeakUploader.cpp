@@ -1,5 +1,6 @@
 // Including the ESP8266 WiFi library
 #include "ThingSpeakUploader.h"
+#include <ESP8266mDNS.h> 
 
 ThingSpeakUploader::ThingSpeakUploader(const char* ssid, const char* password, const char* writeApiKey, unsigned long channelID) {
   /*
@@ -23,14 +24,9 @@ void ThingSpeakUploader::wifiBegin(){
     Serial.println("Failed to connect to WiFi");
   }
   Serial.println("Wifi Connected");
-  Serial.println("IP Address: ");
+  Serial.println("Server IP Address: ");
   Serial.println(WiFi.localIP());
-  // Start the mDNS responder for esp8266.local
-  if (MDNS.begin("iot")) {
-    Serial.println("mDNS responder started");
-  } else {
-    Serial.println("Error setting up MDNS responder!");
-  }
+  
 }
 
 bool ThingSpeakUploader::uploadData(int field, int data) {
