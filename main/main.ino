@@ -45,19 +45,19 @@ void loop() {
   //Perform actions based on variables
   outputControl(temperature, humidity, moisture, targetMoisture, targetTemp, targetHum);
 
-  //Send variables to Thingspeak
-  // esp8266.println("1" + String(temperature));
-  // delay(5000);
-  // esp8266.println("2" + String(humidity));
-  // delay(5000);
-  // esp8266.println("3" + String(moisture));
-  // delay(5000); // Wait a bit before reading again
+  // Send variables to Thingspeak
+  esp8266.println("1" + String(temperature));
+  delay(5000);
+  esp8266.println("2" + String(humidity));
+  delay(5000);
+  esp8266.println("3" + String(moisture));
+  delay(5000); // Wait a bit before reading again
   
   if (sendEmailCounter > 1){
     esp8266.println("4" + String(0));
     sendEmailCounter = 0;
     Serial.println("SENDING EMAIL");
-    delay(2000);
+    delay(5000);
   }
 
   sendEmailCounter++;

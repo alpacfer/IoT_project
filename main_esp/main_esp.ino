@@ -11,7 +11,7 @@ unsigned int smtpPort = 465;
 
 // E-mail credentials
 const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
-const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
+const char* senderPassword = "zoqh knqb qybt dvct";  // App pass for the sender e-mail
 const char* receiverEmail = "mkrhimlev@gmail.com";   // E-mail to receive data
 
 // ThingSpeak API Key
@@ -23,19 +23,26 @@ unsigned long channelID = 2460589;
 SMTPEmailSender smtpSender(ssid, password, smtpHost, smtpPort, senderEmail, senderPassword, receiverEmail);
 ThingSpeakUploader tsUploader(ssid, password, writeApiKey, channelID);
 
+int lastTemperature = 0;
+int lastHumidity = 0;
+int lastMoisture = 0;
+
 void setup() {
   Serial.begin(9600);
+  delay(500);
   while (!Serial) {
     Serial.print(".");
   } 
   Serial.println("Connected to Serial.");
+  delay(500);
 
   // tsUploader.wifiBegin(); // Not necessary if smtpSender.wifiBegin() is also called
 
   // SMTP initialization
   smtpSender.wifiBegin();
+  delay(500);
   smtpSender.SMTPConnect();
-  delay(1000);
+  delay(500);
 }
 
 void loop() {
@@ -52,21 +59,25 @@ void loop() {
           case '1':
             Serial.print("\nTemperature: ");
             Serial.print(value);
-            tsUploader.uploadData(1, value.toInt());
+            lastTemperature = value.toInt();
+            tsUploader.uploadData(1, lastTemperature);
             break;
           case '2':
             Serial.print("\nHumidity: ");
             Serial.print(value);
-            tsUploader.uploadData(2, value.toInt());
+            lastHumidity = value.toInt();
+            tsUploader.uploadData(2, lastHumidity);
             break;
           case '3':
             Serial.print("\nMoisture: ");
             Serial.print(value);
-            tsUploader.uploadData(3, value.toInt());
+            lastMoisture = value.toInt();
+            tsUploader.uploadData(3, lastMoisture);
             break;
           case '4':
-            Serial.print("\nSending email now");
-            smtpSender.sendEmail("TITEL HELLO WORLD", "SUBJECT TEST", "HELLO WOLRD");
+            char title[100]; // Adjust the size as needed
+            sprintf(title, "T%dH%dM%d", lastTemperature, lastHumidity, lastMoisture);
+            smtpSender.sendEmail(title, "SUBJECT TEST", "HELLO WOLRD");
             break;
           default:
             Serial.print("\nReceived: ");

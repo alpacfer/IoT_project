@@ -36,6 +36,8 @@ void SMTPEmailSender::wifiBegin(){
 }
 
 void SMTPEmailSender::SMTPConnect(){
+  MailClient.networkReconnect(true);
+
   // SMTP credentials
   Serial.println("Configuring SMTP session...");
   config.server.host_name = _smtpHost;
@@ -45,10 +47,13 @@ void SMTPEmailSender::SMTPConnect(){
 
    // Connect to SMTP server
   Serial.println("Connecting to SMTP server...");
-  if (!smtp.connect(&config)) {
+  // digitalWrite(LED_BUILTIN, HIGH);
+  while (!smtp.connect(&config)) {
     ESP_MAIL_PRINTF("Connection error, Status Code: %d, Error Code: %d, Reason: %s", smtp.statusCode(), smtp.errorCode(), smtp.errorReason().c_str());
-    return;
+    Serial.println("");
+    delay(50);
   }
+  // digitalWrite(LED_BUILTIN, LOW);
 
   if (!smtp.isLoggedIn()) {
     Serial.println("\nNot yet logged in.");
