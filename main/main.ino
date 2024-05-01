@@ -13,7 +13,7 @@ SoftwareSerial esp8266(rxPin, txPin);
 const int targetMoisture = 40; //Set target soil moisture
 const int targetSunlightHours = 5; //Set target daily amount of sunlight
 const int targetTemp[2] = {15, 30}; //Set target ambient temperature range
-const int targetHum[2] = {15, 40}; //Set target ambient humidity range
+const int targetHum[2] = {15, 50}; //Set target ambient humidity range
 
 const int targetSunlight = targetSunlightHours * 3600; // Converted to seconds, don't touch this
 
@@ -40,6 +40,7 @@ const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
 const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
 const char* receiverEmail = "l.eilsborg@gmail.com";   // E-mail to receive data
 
+int iterationCounter = 0;
 
 void setup() {
   IOsetup(); //This function handles setup for IO
@@ -72,6 +73,7 @@ void loop() {
   if (Day != old_day){
     totalLightDuration = 0;
     old_day = Day;
+    esp8266.println("4" + 0);   // Trigger the send email status
   }
   // Send variables to Thingspeak
   esp8266.println("1" + String(temperature));
@@ -83,6 +85,12 @@ void loop() {
   
   if (watering == 1){
     addWater(5000);
+  }
+  iterationCounter++;
+
+  if (iterationCounter >= 9){
+    esp8266.println("4" + 0);   // Trigger the send email status
+    iterationCounter = 0;
   }
 }
 

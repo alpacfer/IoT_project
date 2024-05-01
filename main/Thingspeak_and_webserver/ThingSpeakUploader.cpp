@@ -55,6 +55,6 @@ bool ThingSpeakUploader::uploadData(int field, int data) {
   ThingSpeak.writeFields(_channelID, _writeApiKey);
 
   _client.stop();
-  Serial.println("Uploading " + String(data) + " to field " + String(field));
+  Serial.println("   Uploading " + String(data) + " to field " + String(field));
   return true;
 }

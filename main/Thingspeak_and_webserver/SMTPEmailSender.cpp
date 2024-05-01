@@ -50,9 +50,10 @@ void SMTPEmailSender::SMTPConnect(){
 
    // Connect to SMTP server
   Serial.println("Connecting to SMTP server...");
-  if (!smtp.connect(&config)) {
+  while (!smtp.connect(&config)) {
     ESP_MAIL_PRINTF("Connection error, Status Code: %d, Error Code: %d, Reason: %s", smtp.statusCode(), smtp.errorCode(), smtp.errorReason().c_str());
-    return;
+    Serial.println("");
+    delay(150);
   }
 
   if (!smtp.isLoggedIn()) {

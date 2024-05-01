@@ -9,8 +9,8 @@
 #include <time.h>
 
 // Replace with your network details
-const char* ssid = "Lucas";
-const char* password = "123456789abc";
+const char* ssid = "QuePasa";
+const char* password = "raviolilove";
 
 // SMTP credentials
 const char* smtpHost = "smtp.gmail.com";
@@ -19,7 +19,7 @@ unsigned int smtpPort = 465;
 // E-mail credentials
 const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
 const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
-const char* receiverEmail = "l.eilsborg@gmail.com";   // E-mail to receive data
+const char* receiverEmail = "mkrhimlev@gmail.com";   // E-mail to receive data
 
 // ThingsSpeak credentials
 unsigned long channelID = 2029121; //your channel
@@ -150,8 +150,8 @@ void loop() {
             break;
           case '4':
             char title[100]; // Adjust the size as needed
-            sprintf(title, "T%dH%dM%d", lastTemperature, lastHumidity, lastMoisture);
-            smtpSender.sendEmail(title, "SUBJECT TEST", "HELLO WOLRD");
+            sprintf(title, "Temperature: %d C, Humidity: %d, Moisture: %d", lastTemperature, lastHumidity, lastMoisture);
+            smtpSender.sendEmail("Demo", "Current plant status", title);
             break;
           default:
             Serial.print("\nReceived: ");

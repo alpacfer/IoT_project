@@ -152,7 +152,7 @@ void printVar(int temperature, int humidity, int moisture, unsigned long totalLi
 //Function that takes in all variables and their respective targets and performs according function
 void outputControl(int temperature, int humidity, int moisture,  int targetMoisture, int targetTemp[2], int targetHum[2]){
   if (moisture < targetMoisture){ //water dosing control is handled first
-    addWater(300); //This time should be adjusted according to the vol
+    addWater(500); //This time should be adjusted according to the vol
   } else if (temperature < targetTemp[0]){ //Next priority is temperature
     LEDMatrixWrite("TempLow");
   } else if (temperature > targetTemp[1]){
