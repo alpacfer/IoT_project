@@ -3,7 +3,7 @@
 #include <LedControl.h>
 
 // for DHT11, 
-static const int pinDHT11 = 2;
+static const int pinDHT11 = 13;
 SimpleDHT11 dht11;
 
 // For Photoresistor

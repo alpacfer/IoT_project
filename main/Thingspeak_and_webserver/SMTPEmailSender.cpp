@@ -33,6 +33,11 @@ void SMTPEmailSender::wifiBegin(){
     Serial.print(".");
   }
   Serial.println("Wifi Connected");
+  Serial.println("Server IP Address: ");
+  delay(100);
+  Serial.println(WiFi.localIP());
+  delay(100);
+
 }
 
 void SMTPEmailSender::SMTPConnect(){

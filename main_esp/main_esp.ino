@@ -47,7 +47,7 @@ void setup() {
 
 void loop() {
   static String receivedData = ""; // static variable to store incoming data
-  while (Serial.available()) {
+  while (Serial.available()) {  
     char c = Serial.read();
     if (c == '\n') {
       if (receivedData.length() > 1) { // check data validity
