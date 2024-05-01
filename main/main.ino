@@ -21,7 +21,7 @@ int receivedInt;
 int temperature = 0;
 int humidity = 0;
 int moisture = 0; // Mapped to 0-100
-int wartering = 0;
+int watering = 0;
 int Day;
 int old_day;
 unsigned long totalLightDuration = 0; // To hold the accumulated duration
@@ -81,8 +81,8 @@ void loop() {
   esp8266.println("3" + String(moisture));
   delay(5000); // Wait a bit before reading again
   
-  if (Watering == 1){
-  addWarter(5000);
+  if (watering == 1){
+    addWater(5000);
   }
 }
 
@@ -101,8 +101,8 @@ void receiveEvent(int howMany) {
   int x = Wire.read();  // receive byte as an integer
   Serial.println(receivedInt);    // print the integer
   if (receivedInt <=100){
-      wartering = !wartering;
-      Serial.println(wartering);
+      watering = !watering;
+      Serial.println(watering);
       } else {
         Day = receivedInt-100;
       }
