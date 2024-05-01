@@ -23,6 +23,7 @@ int humidity = 0;
 int moisture = 0; // Mapped to 0-100
 int wartering = 0;
 int Day;
+int old_day;
 unsigned long totalLightDuration = 0; // To hold the accumulated duration
 
 
@@ -68,7 +69,10 @@ void loop() {
   //Perform actions based on variables
   outputControl(temperature, humidity, moisture, targetMoisture, targetTemp, targetHum);
 
-
+  if (Day != old_day){
+    totalLightDuration = 0;
+    old_day = Day;
+  }
   // Send variables to Thingspeak
   esp8266.println("1" + String(temperature));
   delay(5000);
@@ -77,6 +81,9 @@ void loop() {
   esp8266.println("3" + String(moisture));
   delay(5000); // Wait a bit before reading again
   
+  if (Watering == 1){
+  addWarter(5000);
+  }
 }
 
 

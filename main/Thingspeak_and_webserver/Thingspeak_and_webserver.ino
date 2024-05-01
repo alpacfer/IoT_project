@@ -129,7 +129,6 @@ void loop() {
         // Find key and value of data
         char key = receivedData[0];
         String value = receivedData.substring(1);
-        
         switch (key) {
           case '1':
             Serial.print("\nTemperature: ");
@@ -162,6 +161,7 @@ void loop() {
             break;
         }
       }
+      delay(5000);
       receivedData = ""; // Reset the buffer for the next message
     } 
     else {
@@ -173,11 +173,9 @@ void loop() {
 
 void handleRoot() {                         // When URI / is requested, send a web page with a button to toggle the LED
   server.send(200, "text/html", "<html><title>Internet of Things - Group 15: Smart Plant Pot </title><meta charset=\"utf-8\" \/> \ 
-      </head><body><h1>Welcome to the plant wartering webclient</h1> \ 
-      <p>Internet of Things (IoT) er \"tingenes Internet\" - dagligdags ting kommer på nettet og får ny værdi. Det kan løse mange udfordringer.</p> \
-      <p>Her kommunikerer du med en webserver på en lille microcontroller af typen Arduino, som i dette tilfælde styrer en digital udgang, som du så igen kan bruge til at styre en lampe, en ventilator, tænde for varmen eller hvad du lyster</p> \
-      <p>Klik på nedenstående knap for at tænde eller slukke LED på port D2</p> \
-      <form action=\"/LED\" method=\"POST\" ><input type=\"submit\" value=\"Skift tilstand på LED\" style=\"width:500px; height:100px; font-size:24px\"></form> \
+      </head><body><h1>Welcome to the plant wartering webclient</h1> \ .</p> \
+      <p>Click the buttom below to turn on or off the pump, please wait at least 2 secounds between pushing it</p> \
+      <form action=\"/LED\" method=\"POST\" ><input type=\"submit\" value=\"Turn on or Off warter pump\" style=\"width:500px; height:100px; font-size:24px\"></form> \
       </body></html>");
 }
 
