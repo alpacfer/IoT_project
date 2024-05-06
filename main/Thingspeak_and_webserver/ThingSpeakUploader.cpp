@@ -1,6 +1,5 @@
 // Including the ESP8266 WiFi library
 #include "ThingSpeakUploader.h"
-#include <ESP8266mDNS.h> 
 
 ThingSpeakUploader::ThingSpeakUploader(const char* ssid, const char* password, const char* writeApiKey, unsigned long channelID) {
   /*
