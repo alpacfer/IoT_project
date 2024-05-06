@@ -48,10 +48,11 @@ int lastTemperature = 0;
 int lastHumidity = 0;
 int lastMoisture = 0;
 int receivedInt;
-int day;
+int day = tm.tm_mday;
 int Wartering;
 int day_check;
 int i;
+int wartering_old = 0;
 
 
 void setup() {
@@ -119,6 +120,31 @@ void setup() {
 }
 
 void loop() {
+  day = tm.tm_mday;
+  int Wire_day = 100+day;
+  while(day_check != day){
+    Wire.beginTransmission(8); /* begin with device address 8 */
+    byte lowByte = Wire_day & 0xFF; // Extract LSB
+    byte highByte = (Wire_day >> 8) & 0xFF; // Extract MSB
+    Wire.write(highByte);
+    Wire.write(lowByte);
+    Wire.endTransmission(); /* stop transmitting */
+    Wire.requestFrom(8, 2); /* request & read data of size 13 from slave */
+    while(Wire.available()){
+    byte receivedHighByte = Wire.read();
+    byte receivedLowByte = Wire.read();
+    day_check = (receivedHighByte << 8) | receivedLowByte;
+    Serial.print(".");
+    delay(200);
+    if (i==100){
+      Serial.println("Couldn't sync date....");
+      i=0;
+      break;
+    }
+    i++;
+    Wire.requestFrom(8, 2);
+    }
+  }
   static String receivedData = ""; // static variable to store incoming data
   while (Serial.available()) {
     // Check if a client has connected
@@ -182,6 +208,7 @@ void handleRoot() {                         // When URI / is requested, send a w
 void handleLED() {                          // If a POST request is made to URI /LED
   Wartering = !Wartering;
   // Sending the warter pump status to UNO
+  if(wartering_old != Wartering){
     Wire.beginTransmission(8); /* begin with device address 8 */
     byte lowByte = Wartering & 0xFF; // Extract LSB
     byte highByte = (Wartering >> 8) & 0xFF; // Extract MSB
@@ -189,7 +216,22 @@ void handleLED() {                          // If a POST request is made to URI 
     Wire.write(lowByte);
     Wire.endTransmission(); /* stop transmitting */
     Serial.print("LED");
-    Serial.println(Wartering);                            // Turn on watering
+    Serial.println(Wartering);
+    while(Wire.available()){
+    Wire.requestFrom(8, 2);
+    byte receivedHighByte = Wire.read();
+    byte receivedLowByte = Wire.read();
+    wartering_old = (receivedHighByte << 8) | receivedLowByte;
+    Serial.print(".");
+    delay(200);
+    if (i==100){
+      Serial.println("Couldn't sync date....");
+      i=0;
+      break;
+    }
+    i++;
+    }
+    }                            // Turn on watering
   server.sendHeader("Location","/");        // Add a header to respond with a new location for the browser to go to the home page again
   server.send(303); // Send it back to the browser with an HTTP status 303 (See Other) to redirect
           

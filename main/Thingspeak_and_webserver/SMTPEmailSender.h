@@ -4,6 +4,7 @@
 // Including the ESP8266 WiFi library
 #include <ESP8266WiFi.h>
 #include <ESP_Mail_Client.h>
+#include "SMTPEmailSender.h"
 
 class SMTPEmailSender {
   public:

@@ -77,18 +77,17 @@ void loop() {
   }
   // Send variables to Thingspeak
   esp8266.println("1" + String(temperature));
-  delay(5000);
+  delay(20000);
   esp8266.println("2" + String(humidity));
-  delay(5000);
+  delay(20000);
   esp8266.println("3" + String(moisture));
-  delay(5000); // Wait a bit before reading again
-  
+  delay(20000); // Wait a bit before reading again
   if (watering == 1){
-    addWater(5000);
+    addWater(500);
   }
-  iterationCounter++;
+  iterationCounter++;'¨åop  '
 
-  if (iterationCounter >= 9){
+  if (iterationCounter >= 2){'''q 
     esp8266.println("4" + 0);   // Trigger the send email status
     iterationCounter = 0;
   }
@@ -97,7 +96,7 @@ void loop() {
 
 // function that executes whenever data is received 
 void receiveEvent(int howMany) {
- while (0 <Wire.available()) {
+ while (1 <Wire.available()) {
   
   byte receivedHighByte = Wire.read();
   byte receivedLowByte = Wire.read();
@@ -109,7 +108,7 @@ void receiveEvent(int howMany) {
   int x = Wire.read();  // receive byte as an integer
   Serial.println(receivedInt);    // print the integer
   if (receivedInt <=100){
-      watering = !watering;
+      watering = receivedInt;
       Serial.println(watering);
       } else {
         Day = receivedInt-100;
@@ -122,8 +121,19 @@ void receiveEvent(int howMany) {
 void requestEvent() {
   //int myInt = random(0,100); // Example integer value
   int myInt = Day;
+  int i;
   byte lowByte = myInt & 0xFF; // Extract LSB
   byte highByte = (myInt >> 8) & 0xFF; // Extract MSB
   Wire.write(highByte);
   Wire.write(lowByte);
+  if (i<2){
+    int myInt = watering;
+  byte lowByte = myInt & 0xFF; // Extract LSB
+  byte highByte = (myInt >> 8) & 0xFF; // Extract MSB
+  Wire.write(highByte);
+  Wire.write(lowByte);
+  i = 0;
+  }
+  i++;
+  
 }
