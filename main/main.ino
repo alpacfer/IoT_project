@@ -40,7 +40,7 @@ const char* senderEmail = "34315FPG15@gmail.com";    // E-mail to send data from
 const char* senderPassword = "ppab getq kzoq wyvf";  // App pass for the sender e-mail
 const char* receiverEmail = "l.eilsborg@gmail.com";   // E-mail to receive data
 
-int iterationCounter = 0;
+int iterationCounter = 0; // Used as clock divider to show test/demo of emails without spamming
 
 void setup() {
   IOsetup(); //This function handles setup for IO
@@ -75,8 +75,14 @@ void loop() {
     old_day = Day;
     esp8266.println("4" + 0);   // Trigger the send email status
   }
-  // Send variables to Thingspeak
-  esp8266.println("1" + String(temperature));
+  // Send variables to Thingspeak via ESP8266
+  /* Key with corresponding action
+    1 - Push to Temperature Thingspeak channel
+    2 - Push to Humidity Thingspeak channel
+    3 - Push to Moisture ThingSpeak channel
+    4 - Send email
+  */
+  esp8266.println("1" + String(temperature)); 
   delay(20000);
   esp8266.println("2" + String(humidity));
   delay(20000);
@@ -85,9 +91,9 @@ void loop() {
   if (watering == 1){
     addWater(500);
   }
-  iterationCounter++;'¨åop  '
 
-  if (iterationCounter >= 2){'''q 
+  iterationCounter++;
+  if (iterationCounter >= 2){ // Used for demo and testing 
     esp8266.println("4" + 0);   // Trigger the send email status
     iterationCounter = 0;
   }
@@ -113,7 +119,6 @@ void receiveEvent(int howMany) {
       } else {
         Day = receivedInt-100;
       }
-  
  }
 
 

@@ -33,7 +33,7 @@ class SMTPEmailSender {
     const char* _receiverEmail;
 
     SMTPSession smtp;
-    Session_Config config;  // Structure used in ESP Mail Client library to configure parameters of the SMTP session
+    Session_Config config;  // Structure used in ESP_Mail_Client library to configure parameters of the SMTP session
 };
 
 #endif

@@ -28,8 +28,6 @@ void ThingSpeakUploader::wifiBegin(){
   delay(100);
   Serial.println(WiFi.localIP());
   delay(100);
-
-  
 }
 
 bool ThingSpeakUploader::uploadData(int field, int data) {

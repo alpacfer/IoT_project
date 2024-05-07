@@ -50,13 +50,13 @@ void SMTPEmailSender::SMTPConnect(){
 
    // Connect to SMTP server
   Serial.println("Connecting to SMTP server...");
-  while (!smtp.connect(&config)) {
+  while (!smtp.connect(&config)) {  // Will keep trying to connect to the SMTP if it fails. Sometimes the ESP8266 needs a reset.
     ESP_MAIL_PRINTF("Connection error, Status Code: %d, Error Code: %d, Reason: %s", smtp.statusCode(), smtp.errorCode(), smtp.errorReason().c_str());
     Serial.println("");
     delay(150);
   }
 
-  if (!smtp.isLoggedIn()) {
+  if (!smtp.isLoggedIn()) {   // Prints the login state - mostly used for debugging
     Serial.println("\nNot yet logged in.");
   } else {
     if (smtp.isAuthenticated())
@@ -74,7 +74,6 @@ void SMTPEmailSender::sendEmail(const char* title, const char* subject,const cha
   message.addRecipient("", _receiverEmail);
   // message.text.content = text.c_str();   // Used String instead of const char*
   message.text.content = text;
-
 
   Serial.println("Sending email...");
   if (!MailClient.sendMail(&smtp, &message, false)) {   // false = dont end session
